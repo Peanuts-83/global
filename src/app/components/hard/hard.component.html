@@ -1,0 +1,16 @@
+<h1>Hard skills</h1>
+
+<div class="grid">
+  <ng-container *ngFor="let skill of skills">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{skill.title}}</mat-card-title>
+        <mat-card-subtitle>aaaa</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image [src]="skill.imgUrl" alt="card-img">
+      <mat-card-content>
+        <p>{{skill.comment}}</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</div>
