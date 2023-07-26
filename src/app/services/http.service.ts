@@ -16,7 +16,7 @@ export class HttpService {
    * CREATE
    * @param path
    * @param body
-   * @param specPath <optionnal> (eg. skills: <"hard" | "soft">)
+   * @param specPath <optionnal> (eg. skills: <"/hard" | "/soft">)
    * @returns Observable
    */
   public post<T>(path: string, body: any, specPath?: string): Observable<T> {
@@ -38,7 +38,7 @@ export class HttpService {
    * @param path
    * @param id
    * @param body
-   * @param specPath <optionnal> (eg. skills: <"hard" | "soft">)
+   * @param specPath <optionnal> (eg. skills: <"/hard" | "/soft">)
    * @returns Observable
    */
   public put<T>(path: string, id: number, body: any, specPath?: string): Observable<T> {
@@ -49,7 +49,7 @@ export class HttpService {
    * DELETE
    * @param path
    * @param id
-   * @param specPath <optionnal> (eg. skills: <"hard" | "soft">)
+   * @param specPath <optionnal> (eg. skills: <"/hard" | "/soft">)
    * @returns Observable
    */
   public delete<T>(path: string, id: number, specPath?: string): Observable<T> {
