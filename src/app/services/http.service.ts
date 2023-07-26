@@ -20,17 +20,17 @@ export class HttpService {
    * @returns Observable
    */
   public post<T>(path: string, body: any, specPath?: string): Observable<T> {
-    return this.http.post<T>(`${this.apiURL}${path}${specPath}`, body)
+    return this.http.post<T>(`${this.apiURL}${path}${specPath?specPath:''}`, body)
   }
 
   /**
    * READ
-   * @param path
-   * @param specPath <optionnal> (eg. skills: <"hard" | "soft">)
+   * @param path - '/path' after root path 'http://<domain>/api'
+   * @param specPath <optionnal> (eg. skills: <"/hard" | "/soft">)
    * @returns Observable
    */
   public get<T>(path: string, specPath?: string): Observable<T> {
-    return this.http.get<T>(`${this.apiURL}${path}${specPath}`)
+    return this.http.get<T>(`${this.apiURL}${path}${specPath?specPath:''}`)
   }
 
   /**

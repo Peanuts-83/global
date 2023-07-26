@@ -16,6 +16,8 @@ import { BioComponent } from './components/bio/bio.component';
 import { SoftComponent } from './components/soft/soft.component';
 import { ObjectifsComponent } from './components/objectifs/objectifs.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { HttpService } from './services/http.service'
+import { HttpClientModule } from '@angular/common/http'
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { ContactComponent } from './components/contact/contact.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
     LayoutModule,
