@@ -4,6 +4,7 @@ import { HardComponent } from './hard.component'
 import { UsersComponent } from './users/users.component'
 import { MatCardModule } from '@angular/material/card'
 import { MatGridListModule } from '@angular/material/grid-list'
+import { HardRoutingModule } from './hard-routing.module'
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { MatGridListModule } from '@angular/material/grid-list'
   imports: [
     CommonModule,
     MatCardModule,
-    MatGridListModule
+    MatGridListModule,
+    HardRoutingModule
   ],
   // exports: [HardComponent, UsersComponent],
 })

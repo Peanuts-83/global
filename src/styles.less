@@ -17,6 +17,22 @@ body {
   gap: 30px;
 }
 
+// forms
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  mat-form-field,
+  mat-radio-group {
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    padding: .2em;
+    margin: .2em;
+  }
+}
+
 // mat-card global css
 mat-card {
   .card-avatar {

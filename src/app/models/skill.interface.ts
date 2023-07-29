@@ -1,4 +1,4 @@
-import { ImageBuffer } from "./image-buffer"
+import { ImageBuffer } from "./image-buffer.interface"
 
 export interface Skill {
   title: string

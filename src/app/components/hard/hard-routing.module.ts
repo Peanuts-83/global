@@ -1,4 +1,3 @@
-import { HardModule } from './hard.module'
 import { RouterModule, Routes } from "@angular/router"
 import { UsersComponent } from "./users/users.component"
 import { HardComponent } from "./hard.component"
@@ -11,7 +10,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), HardModule],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class HardRoutingModule {}

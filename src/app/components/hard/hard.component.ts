@@ -1,5 +1,5 @@
-import { Skill } from 'src/app/models/skill'
-import { HttpService } from './../../services/http.service'
+import { Skill } from 'src/app/models/skill.interface'
+import { HttpService } from '../common/services/http.service'
 import { Component } from '@angular/core';
 
 @Component({

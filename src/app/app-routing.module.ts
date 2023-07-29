@@ -8,9 +8,10 @@ import { ContactComponent } from './components/contact/contact.component'
 const routes: Routes = [
   { path: 'bio', component: BioComponent },
   { path: 'soft', component: SoftComponent },
-  { path: 'hard', loadChildren: () => import('./components/hard/hard-routing.module').then(m => m.HardRoutingModule) },
+  { path: 'hard', loadChildren: () => import('./components/hard/hard.module').then(m => m.HardModule) },
   { path: 'objectifs', component: ObjectifsComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'admin', loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule) },
   { path: '**', redirectTo: 'bio' },
 ]
 
