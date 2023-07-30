@@ -23,13 +23,22 @@ form {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-top: 3em;
   mat-form-field,
-  mat-radio-group {
+  mat-radio-group,
+  button {
     width: 50%;
     display: flex;
     justify-content: space-around;
     padding: .2em;
     margin: .2em;
+  }
+  button {
+    margin-top: 4em !important;
+    // padding: .5em 0;
+    :hover {
+      cursor: pointer;
+    }
   }
 }
 

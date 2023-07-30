@@ -1,14 +1,24 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
+import { AuthService, Profile } from './auth.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
   private apiURL = 'http://localhost:3001/api'
+  private user!: Profile
+  private headers: HttpHeaders = new HttpHeaders({})
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthService) {
+    this.headers.set('Content-Type', 'application/json')
+
+    // auth.userProfile$.subscribe(result => {
+    //   this.user = result
+    //   this.headers.append("user", result)
+    // })
+  }
 
   // CRUD Operators //
 
@@ -20,7 +30,7 @@ export class HttpService {
    * @returns Observable
    */
   public post<T>(path: string, body: any, specPath?: string): Observable<T> {
-    return this.http.post<T>(`${this.apiURL}${path}${specPath?specPath:''}`, body)
+    return this.http.post<T>(`${this.apiURL}${path}${specPath?specPath:''}`, body, {headers: this.headers})
   }
 
   /**

@@ -7,6 +7,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core'
 import { MatRadioModule } from '@angular/material/radio'
 import { MatSelectModule } from '@angular/material/select'
+import { MatButtonModule } from '@angular/material/button'
+import { MatTabsModule } from '@angular/material/tabs'
 import { ReactiveFormsModule } from "@angular/forms"
 import { UtilsModule } from "src/app/utils/utils.module"
 
@@ -23,6 +25,8 @@ import { UtilsModule } from "src/app/utils/utils.module"
     MatNativeDateModule,
     MatRadioModule,
     MatSelectModule,
+    MatButtonModule,
+    MatTabsModule,
     ReactiveFormsModule,
     UtilsModule
   ],

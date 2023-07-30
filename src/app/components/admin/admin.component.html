@@ -1,55 +1,75 @@
-<ng-container *ngIf="userProfile==='guest'">
-  <h3>Créer un utilisateur</h3>
-  <form *ngIf="baseForm" [formGroup]="baseForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-      <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
-      <mat-error
-        *ngIf="baseForm.get('username')!.invalid && (baseForm.get('username')!.dirty || baseForm.get('username')!.touched)">
-        <mat-error *ngIf="baseForm.get('username')!.errors?.['required']">Le nom d'utilisateur est requis</mat-error>
-      </mat-error>
-    </mat-form-field>
 
-    <mat-form-field>
-      <input matInput type="text" placeholder="Mot de passe" formControlName="password" />
-      <mat-error *ngIf="baseForm.get('password')!.errors?.['required']">Le mot de passe est requis</mat-error>
-      <mat-error *ngIf="baseForm.get('password')!.errors?.['pattern']">Le mot de passe doit contenir 8 caractères (1 majuscule, 1 minuscule, 1 chiffre)</mat-error>
-    </mat-form-field>
+  <mat-tab-group>
+    <mat-tab label="Se connecter">
+      <form [formGroup]="loginForm" (ngSubmit)="onLoggin()">
+        <mat-form-field MatFormFieldControl="username">
+          <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
+          <mat-error *ngIf="loginForm.get('username')!.invalid && (loginForm.get('username')!.dirty || loginForm.get('username')!.touched)">
+            <mat-error *ngIf="loginForm.get('username')!.errors?.['required']">Le nom d'utilisateur est requis</mat-error>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field MatFormFieldControl="password">
+          <input matInput type="password" formControlName="password" placeholder="Mot de passe" />
+          <mat-error *ngIf="loginForm.get('password')!.invalid && (loginForm.get('password')!.dirty || loginForm.get('password')!.touched)">
+            <mat-error *ngIf="loginForm.get('password')!.errors?.['required']">Le mot de passe est requis</mat-error>
+          </mat-error>
+        </mat-form-field>
 
-    <mat-radio-group formControlName="profile">
-      <mat-radio-button value="guest">Guest</mat-radio-button>
-      <mat-radio-button value="admin">Admin</mat-radio-button>
-    </mat-radio-group>
+        <button mat-button type="submit">Connexion</button>
+      </form>
+    </mat-tab>
 
-    <mat-form-field>
-      <input matInput type="text" placeholder="email" formControlName="email">
-      <mat-error *ngIf="baseForm.get('email')!.errors?.['required']">L'email est requis</mat-error>
-      <mat-error *ngIf="baseForm.get('email')!.errors?.['email']">L'email n'a pas un format correct</mat-error>
-    </mat-form-field>
+    <mat-tab label="Créer un utilisateur" [disabled]="userProfile!=='admin'">
+      <form *ngIf="createForm" [formGroup]="createForm" (ngSubmit)="onCreateUser()">
+        <mat-form-field>
+          <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
+          <mat-error
+            *ngIf="createForm.get('username')!.invalid && (createForm.get('username')!.dirty || createForm.get('username')!.touched)">
+            <mat-error *ngIf="createForm.get('username')!.errors?.['required']">Le nom d'utilisateur est requis</mat-error>
+          </mat-error>
+        </mat-form-field>
 
-    <mat-form-field>
-      <input matInput birthdayValidator
-        [class.invalid]="(baseForm.get('birthday')!.touched || baseForm.get('birthday')!.dirty) && baseForm.get('birthday')!.errors?.['invalid_date']"
-        [matDatepicker]='$any(birthdayPicker)' placeholder="Date d'anniversaire" formControlName="birthday">
-      <mat-datepicker-toggle matSuffix [for]="$any(birthdayPicker)"></mat-datepicker-toggle>
-      <mat-datepicker #birthdayPicker></mat-datepicker>
-      <mat-error *ngIf="baseForm.get('birthday')!.errors?.['invalid_date']">La date est incorrecte</mat-error>
-    </mat-form-field>
+        <mat-form-field>
+          <input matInput type="password" placeholder="Mot de passe" formControlName="password" />
+          <mat-error *ngIf="createForm.get('password')!.errors?.['required']">Le mot de passe est requis</mat-error>
+          <mat-error *ngIf="createForm.get('password')!.errors?.['pattern']">Le mot de passe doit contenir 8 caractères (1 majuscule, 1 minuscule, 1 chiffre)</mat-error>
+        </mat-form-field>
 
-    <mat-form-field id="avatar" class="avatar">
-      <mat-select placeholder="Avatar" formControlName="buffer">
-        <mat-option *ngFor="let avatar of avatars" [value]="avatar">
-          <span class="avatar-selection">
-            <img [src]="avatar.url" alt="img" class="avatar-icon">
-            <span>
-              {{avatar.text}}
-            </span>
-          </span>
-        </mat-option>
-      </mat-select>
-      <img *ngIf="baseForm.get('buffer')!.value" [src]="baseForm.get('buffer')!.value?.url" alt="selectedIcon" class="selected-icon">
-    </mat-form-field>
-    <!-- <p>{{baseForm.get('buffer')!.value | json}}</p> -->
-  </form>
-</ng-container>
+        <mat-radio-group formControlName="profile">
+          <mat-radio-button value="guest">Guest</mat-radio-button>
+          <mat-radio-button value="admin">Admin</mat-radio-button>
+        </mat-radio-group>
 
-<ng-container *ngIf="userProfile==='admin'"></ng-container>
+        <mat-form-field>
+          <input matInput type="text" placeholder="email" formControlName="email">
+          <mat-error *ngIf="createForm.get('email')!.errors?.['required']">L'email est requis</mat-error>
+          <mat-error *ngIf="createForm.get('email')!.errors?.['email']">L'email n'a pas un format correct</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput birthdayValidator
+            [class.invalid]="(createForm.get('birthday')!.touched || createForm.get('birthday')!.dirty) && createForm.get('birthday')!.errors?.['invalid_date']"
+            [matDatepicker]='$any(birthdayPicker)' placeholder="Date d'anniversaire" formControlName="birthday">
+          <mat-datepicker-toggle matSuffix [for]="$any(birthdayPicker)"></mat-datepicker-toggle>
+          <mat-datepicker #birthdayPicker></mat-datepicker>
+          <mat-error *ngIf="createForm.get('birthday')!.errors?.['invalid_date']">La date est incorrecte</mat-error>
+        </mat-form-field>
+
+        <mat-form-field id="avatar" class="avatar">
+          <mat-select placeholder="Avatar" formControlName="buffer">
+            <mat-option *ngFor="let avatar of avatars" [value]="avatar">
+              <span class="avatar-selection">
+                <img [src]="avatar.url" alt="img" class="avatar-icon">
+                <span>
+                  {{avatar.text}}
+                </span>
+              </span>
+            </mat-option>
+          </mat-select>
+          <img *ngIf="createForm.get('buffer')!.value" [src]="createForm.get('buffer')!.value?.url" alt="selectedIcon" class="selected-icon">
+        </mat-form-field>
+
+        <button mat-button type="submit">Créer l'utilisateur</button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
