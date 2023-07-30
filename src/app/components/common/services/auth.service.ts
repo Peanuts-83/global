@@ -1,41 +1,66 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
+import { User } from '../../admin/models/user.interface'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   /**
+ * user values
+ */
+  public user!: User
+
+  /**
    * User profile
    * <string> 'guest' | 'admin'
-   */
-  private _userProfile = new BehaviorSubject(Profile.GUEST)
-  public get userProfile$(): Observable<Profile> {
+  */
+  private _userProfile = new BehaviorSubject('guest')
+  public get userProfile$(): Observable<string> {
     return this._userProfile.asObservable()
   }
-  public set userProfile(value: Profile) {
+  public set userProfile(value: string) {
     this._userProfile.next(value)
   }
 
   /**
-   * Id token for admin user
-   * ADMIN profile if token exists, else GUEST profile
+   * Token Managment
+    * Save token to localStorage with timestamp at the end
+    * Set userProfile <'guest'|'admin'>
    */
-  private _token = new BehaviorSubject<string | null>(null)
-  public get token(): string | null {
-    return this._token.value
-  }
-  public set token(value: string | null) {
-    console.log('TOKEN -', value)
-    this._token.next(value)
-    if (!value) {
-      this.userProfile = Profile.GUEST
+  public tokenAge: any
+  public getToken(): string | null {
+    const datedToken = localStorage.getItem('TRdev_Token')
+    // if timestamp
+    if (datedToken?.split(' ')[1]) {
+      const savedToken = datedToken?.split(' ')[0]
+      const savedJSONDate = datedToken.split(' ')
+        .filter((_, i) => i !== 0)
+        .join(' ')
+      const savedDate: Date = new Date(savedJSONDate)
+      const now = new Date()
+      this.tokenAge = (now.getTime() - savedDate.getTime()) / 1000
+      if (this.tokenAge > 3600) {
+        this.setToken(null)
+        this.tokenAge = null
+      }
     }
-    this.userProfile = Profile.ADMIN
+    return datedToken
   }
 
-  constructor() {
+  public setToken(value: string | null) {
+    if (!value) {
+      localStorage.removeItem('TRdev_Token')
+      this.userProfile = Profile.GUEST
+    } else {
+      const datedToken = `${value} ${new Date()}`
+      localStorage.setItem('TRdev_Token', datedToken)
+      this.userProfile = Profile.ADMIN
+    }
   }
+
+  constructor() { }
+
 
 }
 

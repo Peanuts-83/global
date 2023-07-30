@@ -34,18 +34,18 @@ import { UtilsModule } from "src/app/utils/utils.module"
   ]
 })
 export class AdminModule {
-  constructor() {
-    console.log('AdminModule loaded')
-    const importedModuleNames = [
-      CommonModule,
-      AdminRoutingModule,
-      MatInputModule,
-      MatDatepickerModule,
-      MatNativeDateModule,
-      MatRadioModule,
-      ReactiveFormsModule
-    ].map((module) => module.name)
+  // constructor() {
+  //   console.log('AdminModule loaded')
+  //   const importedModuleNames = [
+  //     CommonModule,
+  //     AdminRoutingModule,
+  //     MatInputModule,
+  //     MatDatepickerModule,
+  //     MatNativeDateModule,
+  //     MatRadioModule,
+  //     ReactiveFormsModule
+  //   ].map((module) => module.name)
 
-    console.log('Imported Modules:', importedModuleNames)
-  }
+  //   console.log('Imported Modules:', importedModuleNames)
+  // }
 }

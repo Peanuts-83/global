@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { AuthService, Profile } from './auth.service'
@@ -7,12 +7,19 @@ import { AuthService, Profile } from './auth.service'
   providedIn: 'root'
 })
 export class HttpService {
-  private apiURL = 'http://localhost:3001/api'
+  /**
+   * apiURL choice
+   * backend side must be set for <HTTP | HTTPS> protocol in index.js
+   * HTTP : 3001 (3000)
+   * HTTPS : 4443 (443)
+   */
+  private apiURL = 'https://localhost:4443/api'
   private user!: Profile
   private headers: HttpHeaders = new HttpHeaders({})
 
   constructor(private http: HttpClient, private auth: AuthService) {
     this.headers.set('Content-Type', 'application/json')
+    this.headers.set('Access-Control-Allow-Origin', '*')
 
     // auth.userProfile$.subscribe(result => {
     //   this.user = result

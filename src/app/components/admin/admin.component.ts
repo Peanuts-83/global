@@ -1,11 +1,11 @@
 import { Component } from '@angular/core'
-import { AuthService } from '../common/services/auth.service'
+import { AuthService, Profile } from '../common/services/auth.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { BaseFormComponent } from '../common/base-form-component'
-import { BirthdayValidator } from 'src/app/utils/validators/birthday.validator'
 import { HttpService } from '../common/services/http.service'
 import { Avatar } from './models/avatar.interface'
 import { TokenResponse } from '../common/models/token.interface'
+import { CoreService } from '../common/services/core.service'
 
 @Component({
   selector: 'app-admin',
@@ -17,7 +17,7 @@ export class AdminComponent extends BaseFormComponent {
   public createForm!: FormGroup
   public avatars: Avatar[] = []
 
-  constructor(auth: AuthService, formBuilder: FormBuilder, public http: HttpService) {
+  constructor(auth: AuthService, formBuilder: FormBuilder, public http: HttpService, private core: CoreService) {
     super(auth, formBuilder)
   }
 
@@ -57,8 +57,8 @@ export class AdminComponent extends BaseFormComponent {
       buffer: [null]
     })
     // Avatars init
-    for (let i=1; i<=12; i++) {
-      this.avatars.push({url:`assets/avatar/user${i}.png`, text:`avatar ${i}`})
+    for (let i = 1; i <= 12; i++) {
+      this.avatars.push({ url: `assets/avatar/user${i}.png`, text: `avatar ${i}` })
     }
     // Get icons
     // this.http.get<Avatar[]>('/avatars').subscribe((result: Avatar[]) => {
@@ -71,16 +71,35 @@ export class AdminComponent extends BaseFormComponent {
       username: this.loginForm.get('username')!.value,
       password: this.loginForm.get('password')!.value
     }
-    this.http.post<TokenResponse>('/users/auth', body).subscribe(result => {
-      if (!result || result.error) {
-        alert(`Login error ${result?.error}`)
-        this.auth.token = null
+    this.http.post<TokenResponse>('/users/auth', body).subscribe({
+      next: (result: TokenResponse) => {
+        if (result.status === 200) {
+          console.log(`SUCCESS - ${result.body?.message}`)
+          this.core.initForm(this.loginForm)
+        }
+        this.auth.setToken(result.body?.token ? result.body.token : null)
+        const { username, email, profile, birthday } = result.body
+        this.auth.user = { username, email, profile, birthday }
+        localStorage.setItem('TRdevUser', JSON.stringify(this.auth.user))
+      },
+      error: err => {
+        console.error(`ERROR : ${err.error.body.error}`)
+        if (err.status === 401) {
+          this.auth.setToken(null)
+        }
       }
-      this.auth.token = result.token ? result.token : null
     })
+  }
+
+  public onLoggout() {
+    this.auth.setToken(null)
+    this.auth.user = { username: '', profile: Profile.GUEST }
+    localStorage.setItem('TRdevUser', JSON.stringify(this.auth.user))
   }
 
   public onCreateUser() {
 
   }
+
+
 }

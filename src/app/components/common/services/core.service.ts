@@ -1,4 +1,5 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core'
+import { FormGroup } from '@angular/forms'
 import { Subscription } from 'rxjs'
 
 @Injectable({
@@ -15,5 +16,16 @@ export class CoreService implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe()
+  }
+
+  /**
+  * Sets all form fields values to null
+  * @param formGroup
+  */
+  public initForm(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(key => {
+      formGroup.get(key)?.setValue(null)
+      formGroup.get(key)?.markAsUntouched()
+    })
   }
 }
