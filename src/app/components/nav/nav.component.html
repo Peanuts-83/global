@@ -1,9 +1,8 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(breakpoint$ | async) === '(min-width: 500px)' ? 'dialog' : 'navigation'"
-      [mode]="(breakpoint$ | async) === '(min-width: 500px)' ? 'over' : 'side'"
-      [opened]="(breakpoint$ | async) === '(min-width: 500px)' === false">
-      {{breakpoint$ | async}}
+      [attr.role]="isSmall ? 'dialog' : 'navigation'"
+      [mode]="isSmall ? 'over' : 'side'"
+      [opened]="isSmall === false">
     <mat-toolbar></mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="admin" class="menu-low">Admin</a>
@@ -21,13 +20,14 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="(breakpoint$ | async) === '(min-width: 500px)'">
+        *ngIf="isSmall">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>Thomas RANQUE - développeur front-end</span>
     </mat-toolbar>
     <!-- content place -->
     <div class="container">
+      {{isSmall}}
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

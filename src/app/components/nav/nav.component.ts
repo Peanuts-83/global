@@ -13,18 +13,30 @@ export class NavComponent {
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map((result: any) => {
-        console.log(result.matches)
+        // console.log('isHanset', result.matches)
         return result.matches}),
       shareReplay()
     );
 
+  isSmall = false
     readonly breakpoint$ = this.breakpointObserver
-    .observe([Breakpoints.Large, Breakpoints.Medium, Breakpoints.Small, '(min-width: 500px)'])
+      .observe([Breakpoints.Large, Breakpoints.Medium, Breakpoints.XSmall])
     .pipe(
-      tap(value => console.log(value)),
-      distinctUntilChanged()
+      tap(value => {
+        if (value.breakpoints[Breakpoints.XSmall]) {
+          this.isSmall = true
+        } else {
+          this.isSmall = false
+        }
+        console.log('breakpoint', value)
+      }),
+      // distinctUntilChanged()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+    
+
+  constructor(private breakpointObserver: BreakpointObserver) {
+    this.breakpoint$.subscribe()
+  }
 
 }
