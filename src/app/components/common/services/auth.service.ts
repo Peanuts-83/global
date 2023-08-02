@@ -7,33 +7,32 @@ import { User } from '../../admin/models/user.interface'
 })
 export class AuthService {
   /**
- * user values
- */
-  public user!: User
-
-  /**
-   * User profile
+   * User
    * <string> 'guest' | 'admin'
   */
-  private _userProfile = new BehaviorSubject('guest')
-  public get userProfile$(): Observable<string> {
-    return this._userProfile.asObservable()
+  private _user = new BehaviorSubject<User>({username: '', profile: 'guest'})
+  public get user$(): Observable<User> {
+    return this._user.asObservable()
   }
-  public set userProfile(value: string) {
-    this._userProfile.next(value)
+  public get user(): User {
+    return this._user.value
+  }
+  public set user(value: User) {
+    this._user.next(value)
   }
 
   /**
    * Token Managment
     * Save token to localStorage with timestamp at the end
-    * Set userProfile <'guest'|'admin'>
+    * Set user <'guest'|'admin'>
    */
   public tokenAge: any
+
   public getToken(): string | null {
-    const datedToken = localStorage.getItem('TRdev_Token')
+    const datedToken = localStorage.getItem('TRdevToken')
     // if timestamp
     if (datedToken?.split(' ')[1]) {
-      const savedToken = datedToken?.split(' ')[0]
+      // const savedToken = datedToken?.split(' ')[0]
       const savedJSONDate = datedToken.split(' ')
         .filter((_, i) => i !== 0)
         .join(' ')
@@ -43,6 +42,14 @@ export class AuthService {
       if (this.tokenAge > 3600) {
         this.setToken(null)
         this.tokenAge = null
+        this.user = {username: '', profile: 'guest'}
+        localStorage.setItem('TRdevUser', JSON.stringify(this.user))
+      } else {
+        const storage = localStorage.getItem('TRdevUser')
+        if (storage) {
+          const {username,  email, profile, birthday} = JSON.parse(storage)
+          this.user = {username,  email, profile, birthday}
+        }
       }
     }
     return datedToken
@@ -50,12 +57,11 @@ export class AuthService {
 
   public setToken(value: string | null) {
     if (!value) {
-      localStorage.removeItem('TRdev_Token')
-      this.userProfile = Profile.GUEST
-    } else {
+      localStorage.removeItem('TRdevToken')
+      this.user = {username: '', profile: 'guest'}
+      } else {
       const datedToken = `${value} ${new Date()}`
-      localStorage.setItem('TRdev_Token', datedToken)
-      this.userProfile = Profile.ADMIN
+      localStorage.setItem('TRdevToken', datedToken)
     }
   }
 

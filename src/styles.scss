@@ -1,0 +1,127 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '@angular/material/theming';
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$app-primary: mat-palette($mat-pink-palette);
+$app-accent: mat-palette($mat-cyan-palette);
+$app-warn: mat-palette($mat-red);
+$app-success: mat-palette($mat-light-green);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: mat-dark-theme($app-primary, $app-accent, $app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($app-theme);
+
+$color-prim-light: map-get($app-theme, primary, 200);
+$color-prim-reg: map-get($app-theme, primary, 500);
+$color-prim-transp: rgba(map-get($app-theme, primary, 500),.5);
+$color-prim-dark: map-get($app-theme, primary, 900);
+
+@mixin mat-color ($prop, $color, $start-arg: null, $end-arg: null) {
+  #{$prop}: $start-arg $color $end-arg;
+}
+$accent: map-get($app-theme, accent);
+$color-primary: #{mat-color($app-primary)};
+$color-accent: #{mat-color($app-accent)};
+$color-warn: #{mat-color($app-warn)};
+$color-success: #{mat-color($app-success)};
+
+@mixin color-prim ($target, $tint) {
+  #{$target}: map-get($app-theme, $primary, $tint) !important;
+}
+
+@mixin styles_box ($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  box-sizing: border-box;
+}
+
+// grid for section menu
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px;
+}
+
+// forms
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 3em;
+
+  mat-form-field,
+  mat-radio-group,
+  button {
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    padding: .2em;
+    margin: .2em;
+  }
+
+  button.mat-button {
+    margin-top: 4em !important;
+    // border: 1px solid $color-primary;
+    @include mat-color(border, $color-prim-light, 1px solid );
+    @include mat-color(background-color, $color-prim-transp);
+    // @include mat-color(color, $color-prim-light);
+    border: 1px solid $color-prim-light;
+    // @include primary('background-color', '200');
+    // color: $color-accent;
+    :disabled {
+      background-color: $color-prim-transp;
+    }
+  }
+}
+
+// mat-card global css
+mat-card {
+  .card-avatar {
+    background-size: cover;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  form {
+    mat-form-field,
+    mat-radio-group,
+    button {
+      width: 80%;
+    }
+  }
+}

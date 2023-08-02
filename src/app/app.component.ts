@@ -7,7 +7,7 @@ import { HttpService } from './components/common/services/http.service'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent extends BaseComponent implements OnInit {
 
@@ -19,12 +19,6 @@ export class AppComponent extends BaseComponent implements OnInit {
     super.ngOnInit()
     // Check for valid token in localStorage
     this.auth.getToken()
-    if (localStorage.getItem('TRdevUser')) {
-      const jsonValue = localStorage.getItem('TRdevUser')
-      if (jsonValue) {
-        this.auth.user = JSON.parse(jsonValue)
-        this.auth.userProfile = this.auth.user.profile
-      }
-    }
+
   }
 }
