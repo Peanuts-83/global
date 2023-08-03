@@ -53,18 +53,24 @@ $color-success: #{mat-color($app-success)};
   right: 30px;
   width: fit-content;
   font-size: small;
-  padding: 15px;
-  border-radius: 10px;
   box-shadow: 5px 5px 15px black;
   color: white;
   background-color: rgba($color: black, $alpha: .2);
 
+  b {
+    margin-right: 15px;
+  }
+
   .dev-nav {
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
+    background-color: rgba($color: $color-prim-transp, $alpha: 1.0);
 
     .dev-switch {
-      font-size: 36px;
+      font-size: 24px;
     }
   }
 }

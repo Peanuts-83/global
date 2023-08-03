@@ -1,11 +1,13 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core'
 import { FormGroup } from '@angular/forms'
-import { Subscription } from 'rxjs'
+import { BehaviorSubject, Subscription } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoreService implements OnInit, OnDestroy {
+  // dev tools for all components access to update any required value
+  devWatch$ = new BehaviorSubject({})
 
   public subscriptions: Subscription = new Subscription()
 

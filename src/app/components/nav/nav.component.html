@@ -1,11 +1,11 @@
 <div class="dev-console">
-  <div class="dev-nav">
+  <div class="dev-nav" (click)="devShow=!devShow">
     <b>dev console</b>
-    <span class="dev-switch" title="reduce">-</span>
-    <span class="dev-switch" title="expand">+</span>
+    <span *ngIf="devShow" class="dev-switch" title="reduce" >--</span>
+    <span *ngIf="!devShow" class="dev-switch" title="expand" >+</span>
   </div>
-  <pre>
-    {{breakpoint$ | async | json}}
+  <pre *ngIf="devShow">
+    {{devWatch | json}}
   </pre>
 </div>
 
