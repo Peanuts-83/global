@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent {
+  // dev tools - expand/collapse
+  devShow = true
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -20,10 +22,10 @@ export class NavComponent {
 
   isSmall = false
     readonly breakpoint$ = this.breakpointObserver
-      .observe([Breakpoints.Large, Breakpoints.Medium, Breakpoints.XSmall])
+      .observe([Breakpoints.Large, Breakpoints.Medium, Breakpoints.Small, Breakpoints.XSmall])
     .pipe(
       tap(value => {
-        if (value.breakpoints[Breakpoints.XSmall]) {
+        if (value.breakpoints[Breakpoints.Small] || value.breakpoints[Breakpoints.XSmall]) {
           this.isSmall = true
         } else {
           this.isSmall = false
@@ -33,7 +35,7 @@ export class NavComponent {
       // distinctUntilChanged()
     );
 
-    
+
 
   constructor(private breakpointObserver: BreakpointObserver) {
     this.breakpoint$.subscribe()

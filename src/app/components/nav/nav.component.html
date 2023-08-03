@@ -1,3 +1,14 @@
+<div class="dev-console">
+  <div class="dev-nav">
+    <b>dev console</b>
+    <span class="dev-switch" title="reduce">-</span>
+    <span class="dev-switch" title="expand">+</span>
+  </div>
+  <pre>
+    {{breakpoint$ | async | json}}
+  </pre>
+</div>
+
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="isSmall ? 'dialog' : 'navigation'"
@@ -27,7 +38,6 @@
     </mat-toolbar>
     <!-- content place -->
     <div class="container">
-      {{isSmall}}
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

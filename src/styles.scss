@@ -46,6 +46,29 @@ $color-success: #{mat-color($app-success)};
   border-radius: $radius;
 }
 
+.dev-console {
+  position: absolute;
+  z-index: 100;
+  top: 15px;
+  right: 30px;
+  width: fit-content;
+  font-size: small;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 15px black;
+  color: white;
+  background-color: rgba($color: black, $alpha: .2);
+
+  .dev-nav {
+    display: flex;
+    justify-content: space-between;
+
+    .dev-switch {
+      font-size: 36px;
+    }
+  }
+}
+
 
 html,
 body {
@@ -111,7 +134,7 @@ mat-card {
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 960px) {
   .grid {
     grid-template-columns: 1fr;
     gap: 15px;
