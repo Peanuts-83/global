@@ -1,7 +1,7 @@
 
   <mat-tab-group>
     <mat-tab label="Se connecter" *ngIf="user.profile!=='admin'">
-      <form [formGroup]="loginForm" (ngSubmit)="onLoggin()">
+      <form [formGroup]="loginForm" (ngSubmit)="onLoggin($event)">
         <mat-form-field MatFormFieldControl="username">
           <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
           <mat-error *ngIf="loginForm.get('username')!.invalid && (loginForm.get('username')!.dirty || loginForm.get('username')!.touched)">
@@ -14,19 +14,22 @@
             <mat-error *ngIf="loginForm.get('password')!.errors?.['required']">Le mot de passe est requis</mat-error>
           </mat-error>
         </mat-form-field>
+
         <button mat-button type="submit">Connexion</button>
       </form>
     </mat-tab>
 
+
     <mat-tab label="Se déconnecter" *ngIf="user.profile==='admin'">
-      <form>
+      <form >
         <h3>Welcome back {{ auth.user?.username }} you are connected as Admin</h3>
-        <button mat-button (click)="onLoggout()">Déconnexion</button>
+        <button mat-button (click)="onLoggout($event)">Déconnexion</button>
       </form>
     </mat-tab>
 
+
     <mat-tab label="Créer un utilisateur" [disabled]="user.profile!=='admin'">
-      <form *ngIf="createForm" [formGroup]="createForm" (ngSubmit)="onCreateUser()">
+      <form *ngIf="createForm" [formGroup]="createForm" (ngSubmit)="onCreateUser($event)">
         <mat-form-field>
           <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
           <mat-error

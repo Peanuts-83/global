@@ -8,6 +8,11 @@ import { BehaviorSubject, Subscription } from 'rxjs'
 export class CoreService implements OnInit, OnDestroy {
   // dev tools for all components access to update any required value
   devWatch$ = new BehaviorSubject({})
+  setDevWatch(key: string, value: any) {
+    const val: { [key: string]: any } = this.devWatch$.value
+    val[key] = value
+    this.devWatch$.next(val)
+  }
 
   public subscriptions: Subscription = new Subscription()
 

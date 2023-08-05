@@ -6,6 +6,8 @@ import { HttpService } from '../common/services/http.service'
 import { Avatar } from './models/avatar.interface'
 import { TokenResponse } from '../common/models/token.interface'
 import { CoreService } from '../common/services/core.service'
+import { User } from './models/user.interface'
+import { HttpResponse } from '@angular/common/http'
 
 @Component({
   selector: 'app-admin',
@@ -66,12 +68,13 @@ export class AdminComponent extends BaseFormComponent {
     // })
   }
 
-  public onLoggin() {
+  public onLoggin(a_event: Event) {
+    a_event.stopPropagation()
     const body = {
       username: this.loginForm.get('username')!.value,
       password: this.loginForm.get('password')!.value
     }
-    this.http.post<TokenResponse>('/users/auth', body).subscribe({
+    this.http.post<TokenResponse>('/users/auth', body, this.http.headers).subscribe({
       next: (result: TokenResponse) => {
         if (result.status === 200) {
           console.log(`SUCCESS - ${result.body?.message}`)
@@ -91,14 +94,31 @@ export class AdminComponent extends BaseFormComponent {
     })
   }
 
-  public onLoggout() {
+  public onLoggout(a_event: Event) {
+    a_event.stopPropagation()
     this.auth.setToken(null)
     this.auth.user = { username: '', profile: Profile.GUEST }
     localStorage.setItem('TRdevUser', JSON.stringify(this.auth.user))
   }
 
-  public onCreateUser() {
-
+  public onCreateUser(a_event: Event) {
+    a_event.stopPropagation()
+    // Get values from the form to create the user
+    const { profile, username, password, buffer, email, birthday, icon } = this.createForm.value
+    const l_newUser = {profile, username, password, buffer, email, birthday, icon}
+    this.http.post<HttpResponse<User>>('/users', l_newUser, this.http.headers).subscribe({
+      next: result => {
+        if (result.status===200) {
+          alert('User profile created successfully')
+          this.core.setDevWatch('user', l_newUser)
+        } else {
+          alert(result.statusText)
+        }
+      },
+      error: err => {
+        alert(`Error : ${JSON.stringify(err.message)}`)
+      }}
+    )
   }
 
 

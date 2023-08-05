@@ -15,17 +15,26 @@ export class HttpService {
    */
   private apiURL = 'https://localhost:4443/api'
   private user!: Profile
-  private headers: HttpHeaders = new HttpHeaders({})
 
   constructor(private http: HttpClient, private auth: AuthService) {
-    this.headers.set('Content-Type', 'application/json')
-    this.headers.set('Access-Control-Allow-Origin', '*')
 
-    // auth.userProfile$.subscribe(result => {
-    //   this.user = result
-    //   this.headers.append("user", result)
-    // })
   }
+
+  get headers() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': this.auth.token$.value || '1111'
+    })
+    // headers.set('Content-Type', 'application/json')
+    // headers.set('Access-Control-Allow-Origin', '*')
+    // headers.set('Content-Type', '')
+    // if (this.auth.token$.value) {
+    //   headers.set('Authorization', this.auth.token$.value)
+    // }
+    return headers
+  }
+
 
   // CRUD Operators //
 
@@ -36,7 +45,7 @@ export class HttpService {
    * @param specPath <optionnal> (eg. skills: <"/hard" | "/soft">)
    * @returns Observable
    */
-  public post<T>(path: string, body: any, specPath?: string): Observable<T> {
+  public post<T>(path: string, body: any, headers: HttpHeaders, specPath?: string): Observable<T> {
     return this.http.post<T>(`${this.apiURL}${path}${specPath?specPath:''}`, body, {headers: this.headers})
   }
 
