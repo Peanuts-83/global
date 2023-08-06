@@ -16,22 +16,19 @@ export class HttpService {
   private apiURL = 'https://localhost:4443/api'
   private user!: Profile
 
-  constructor(private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
-  }
-
-  get headers() {
+  get headers(): HttpHeaders {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Authorization': this.auth.token$.value || '1111'
+      "Connection": "keep-alive"
+      // 'Access-Control-Allow-Origin': '*'
     })
-    // headers.set('Content-Type', 'application/json')
+    headers.set('Content-Type', 'application/json')
     // headers.set('Access-Control-Allow-Origin', '*')
     // headers.set('Content-Type', '')
-    // if (this.auth.token$.value) {
-    //   headers.set('Authorization', this.auth.token$.value)
-    // }
+    if (this.auth.token$.value) {
+      headers.set('Authorization', this.auth.token$.value)
+    }
     return headers
   }
 
@@ -45,8 +42,8 @@ export class HttpService {
    * @param specPath <optionnal> (eg. skills: <"/hard" | "/soft">)
    * @returns Observable
    */
-  public post<T>(path: string, body: any, headers: HttpHeaders, specPath?: string): Observable<T> {
-    return this.http.post<T>(`${this.apiURL}${path}${specPath?specPath:''}`, body, {headers: this.headers})
+  public post<T>(path: string, body: any, specPath?: string): Observable<T> {
+    return this.http.post<T>(`${this.apiURL}${path}${specPath ? specPath : ''}`, body, { headers: this.headers })
   }
 
   /**
@@ -56,7 +53,7 @@ export class HttpService {
    * @returns Observable
    */
   public get<T>(path: string, specPath?: string): Observable<T> {
-    return this.http.get<T>(`${this.apiURL}${path}${specPath?specPath:''}`)
+    return this.http.get<T>(`${this.apiURL}${path}${specPath ? specPath : ''}`, { headers: this.headers })
   }
 
   /**
@@ -68,7 +65,7 @@ export class HttpService {
    * @returns Observable
    */
   public put<T>(path: string, id: number, body: any, specPath?: string): Observable<T> {
-    return this.http.put<T>(`${this.apiURL}${path}${specPath}/${id}`, body)
+    return this.http.put<T>(`${this.apiURL}${path}${specPath}/${id}`, body, { headers: this.headers })
   }
 
   /**
@@ -79,6 +76,6 @@ export class HttpService {
    * @returns Observable
    */
   public delete<T>(path: string, id: number, specPath?: string): Observable<T> {
-    return this.http.delete<T>(`${this.apiURL}${path}${specPath}/${id}`)
+    return this.http.delete<T>(`${this.apiURL}${path}${specPath}/${id}`, { headers: this.headers })
   }
 }

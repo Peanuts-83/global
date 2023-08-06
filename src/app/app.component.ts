@@ -3,6 +3,7 @@ import { BaseComponent } from './components/common/base-component'
 import { Base } from './components/common/models/base.interface'
 import { AuthService } from './components/common/services/auth.service'
 import { HttpService } from './components/common/services/http.service'
+import { CoreService } from './components/common/services/core.service'
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,8 @@ import { HttpService } from './components/common/services/http.service'
 })
 export class AppComponent extends BaseComponent implements OnInit {
 
-  constructor(auth: AuthService, public http: HttpService) {
-    super(auth)
+  constructor(core: CoreService, auth: AuthService) {
+    super(core, auth)
   }
 
   override ngOnInit(): void {

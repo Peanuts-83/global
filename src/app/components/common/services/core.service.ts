@@ -1,6 +1,9 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core'
 import { FormGroup } from '@angular/forms'
 import { BehaviorSubject, Subscription } from 'rxjs'
+import { UserService } from './user.service'
+import { HttpService } from './http.service'
+import { AuthService } from './auth.service'
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +19,12 @@ export class CoreService implements OnInit, OnDestroy {
 
   public subscriptions: Subscription = new Subscription()
 
-  constructor() { }
+  constructor(public userService: UserService, public http: HttpService, private auth: AuthService) { }
 
   ngOnInit(): void {
+    this.auth.token$.subscribe(token => {
+      this.setDevWatch('token', token ? token.slice(0,15)+'...' : null)
+    })
   }
 
   ngOnDestroy(): void {

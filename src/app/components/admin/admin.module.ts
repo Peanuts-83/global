@@ -9,6 +9,7 @@ import { MatRadioModule } from '@angular/material/radio'
 import { MatSelectModule } from '@angular/material/select'
 import { MatButtonModule } from '@angular/material/button'
 import { MatTabsModule } from '@angular/material/tabs'
+import { MatTableModule } from '@angular/material/table'
 import { ReactiveFormsModule } from "@angular/forms"
 import { UtilsModule } from "src/app/utils/utils.module"
 
@@ -27,6 +28,7 @@ import { UtilsModule } from "src/app/utils/utils.module"
     MatSelectModule,
     MatButtonModule,
     MatTabsModule,
+    MatTableModule,
     ReactiveFormsModule,
     UtilsModule
   ],
