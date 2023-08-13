@@ -13,16 +13,12 @@ export class HttpService {
    * HTTP : 3001 (3000)
    * HTTPS : 4443 (443)
    */
-  private apiURL = 'https://localhost:4443/api'
-  private user!: Profile
+  private apiURL = 'http://localhost:3001/api'
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   get headers(): HttpHeaders {
-    const headers = new HttpHeaders({
-      "Connection": "keep-alive"
-      // 'Access-Control-Allow-Origin': '*'
-    })
+    const headers = new HttpHeaders()
     headers.set('Content-Type', 'application/json')
     // headers.set('Access-Control-Allow-Origin', '*')
     // headers.set('Content-Type', '')

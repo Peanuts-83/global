@@ -7,11 +7,12 @@ import { User } from "../../admin/models/user.interface"
   providedIn: 'root'
 })
 export class UserService {
+  private guestUser = {username: '', profile: 'guest'}
   /**
    * User
    * <string> 'guest' | 'admin'
   */
-  private _user$ = new BehaviorSubject<User>({username: '', profile: 'guest'})
+  private _user$ = new BehaviorSubject<User>(this.guestUser)
   public get user$(): Observable<User> {
     return this._user$.asObservable()
   }
@@ -21,7 +22,7 @@ export class UserService {
   public set user(value: User) {
     this._user$.next(value)
   }
-  public userList$!: Observable<User[]>
+  public userList$: BehaviorSubject<User[]> = new BehaviorSubject([this.guestUser])
 
 
   constructor() {}

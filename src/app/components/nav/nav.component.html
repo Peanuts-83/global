@@ -1,4 +1,4 @@
-<div class="dev-console">
+<div *ngIf="userService.user.profile==='admin'" class="dev-console">
   <div class="dev-nav" (click)="devShow=!devShow">
     <b>dev console</b>
     <span *ngIf="devShow" class="dev-switch" title="reduce" >--</span>

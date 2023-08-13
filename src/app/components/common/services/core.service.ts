@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { FormGroup } from '@angular/forms'
-import { BehaviorSubject, Subscription } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import { UserService } from './user.service'
 import { HttpService } from './http.service'
 import { AuthService } from './auth.service'
@@ -8,7 +8,7 @@ import { AuthService } from './auth.service'
 @Injectable({
   providedIn: 'root'
 })
-export class CoreService implements OnInit, OnDestroy {
+export class CoreService  {
   // dev tools for all components access to update any required value
   devWatch$ = new BehaviorSubject({})
   setDevWatch(key: string, value: any) {
@@ -17,18 +17,10 @@ export class CoreService implements OnInit, OnDestroy {
     this.devWatch$.next(val)
   }
 
-  public subscriptions: Subscription = new Subscription()
-
-  constructor(public userService: UserService, public http: HttpService, private auth: AuthService) { }
-
-  ngOnInit(): void {
-    this.auth.token$.subscribe(token => {
-      this.setDevWatch('token', token ? token.slice(0,15)+'...' : null)
+  constructor(public userService: UserService, public http: HttpService, private auth: AuthService) {
+    userService.user$.subscribe(user => {
+      this.setDevWatch('User', user ? user : null)
     })
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe()
   }
 
   /**

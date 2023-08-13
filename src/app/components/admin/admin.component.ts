@@ -7,7 +7,8 @@ import { TokenResponse } from '../common/models/token.interface'
 import { CoreService } from '../common/services/core.service'
 import { User } from './models/user.interface'
 import { HttpResponse } from '@angular/common/http'
-import { tap } from 'rxjs'
+import { BehaviorSubject, tap } from 'rxjs'
+import { DataSource } from '@angular/cdk/collections'
 
 @Component({
   selector: 'app-admin',
@@ -19,6 +20,9 @@ export class AdminComponent extends BaseFormComponent {
   public createForm!: FormGroup
   public avatars: Avatar[] = []
   public userList!: User[]
+  public dataSource!: any
+  public displayedColumns = ['username', 'email', 'profile']
+
 
   constructor(core: CoreService, auth: AuthService, formBuilder: FormBuilder) {
     super(core, auth, formBuilder)
@@ -27,10 +31,15 @@ export class AdminComponent extends BaseFormComponent {
   override ngOnInit(): void {
     super.ngOnInit()
     // Get userList
-    this.userService.userList$ = this.http.get<User[]>('/users').pipe(
-      tap(result => this.userList = result)
-    )
-    this.baseSubscription.add(this.userService.userList$.subscribe())
+    this.http.get<HttpResponse<User[]>>('/users').pipe(
+      tap(result => {
+        if (result && result.body) {
+          this.userService.userList$.next(result.body)
+          this.userList = result.body
+          this.dataSource = new UserListDataSource(this.userList)
+        }
+      })
+    ).subscribe()
     // Form init
     this.loginForm = this.formBuilder.group({
       username: [null, [Validators.required]],
@@ -129,4 +138,16 @@ export class AdminComponent extends BaseFormComponent {
   }
 
 
+}
+
+export class UserListDataSource extends DataSource<any> {
+  constructor(public ELEMENT_DATA: any) {
+    super()
+    this.ELEMENT_DATA = ELEMENT_DATA
+  }
+  data = new BehaviorSubject<any>(this.ELEMENT_DATA)
+  connect() {
+    return this.data
+  }
+  disconnect() { }
 }

@@ -29,3 +29,11 @@
   border: 7px solid white;
   box-shadow: -3px -3px 5px rgb(5, 23, 54) inset;
 }
+
+table {
+  width: 100%;
+  margin: 3em 0;
+  th {
+    background-color: rgba($color: black, $alpha: .5);
+  }
+}

@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators'
 import { Observable } from 'rxjs'
 import { CoreService } from '../common/services/core.service'
+import { UserService } from '../common/services/user.service'
 
 @Component({
   selector: 'app-nav',
@@ -51,7 +52,7 @@ export class NavComponent {
 
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private core: CoreService) {
+  constructor(private breakpointObserver: BreakpointObserver, private core: CoreService, public userService: UserService) {
     this.breakpoint$.subscribe()
     // report devtool to core service
     this.core.devWatch$.subscribe(result => this.devWatch = result)
