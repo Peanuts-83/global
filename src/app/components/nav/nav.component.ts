@@ -12,7 +12,7 @@ import { UserService } from '../common/services/user.service'
 })
 export class NavComponent {
   // devtool - expand/collapse
-  devShow = true
+  devShow = false
   // devtool values to display
   devWatch = {}
 

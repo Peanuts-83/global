@@ -30,7 +30,7 @@ export class AuthService {
     * Save token to localStorage with timestamp at the end
     * Set user <'guest'|'admin'>
    */
-  public tokenAge: any
+  // public tokenAge: any
   public token$ = new BehaviorSubject<string | null>(null)
 
   // TODO: token age should be managed at backend side...
@@ -44,10 +44,12 @@ export class AuthService {
       if (storage) {
         const { username, email, profile, birthday } = JSON.parse(storage)
         this.userService.user = { username, email, profile, birthday }
+        this.token$.next(l_token)
       }
     } else {
       this.userService.user = { username: '', profile: 'guest' }
       localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+      this.token$.next(null)
     }
 
     return l_token
@@ -70,5 +72,6 @@ export class AuthService {
 
 export enum Profile {
   GUEST = 'guest',
-  ADMIN = 'admin'
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin',
 }

@@ -18,12 +18,14 @@ export class HttpService {
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   get headers(): HttpHeaders {
-    const headers = new HttpHeaders()
-    headers.set('Content-Type', 'application/json')
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+    // headers.set('Content-Type', 'application/json')
     // headers.set('Access-Control-Allow-Origin', '*')
     // headers.set('Content-Type', '')
     if (this.auth.token$.value) {
-      headers.set('Authorization', this.auth.token$.value)
+      headers = headers.set('Authorization', `Bearer ${this.auth.token$.value}`)
     }
     return headers
   }

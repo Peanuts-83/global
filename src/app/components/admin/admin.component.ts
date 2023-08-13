@@ -123,11 +123,11 @@ export class AdminComponent extends BaseFormComponent {
     const l_newUser = { profile, username, password, buffer, email, birthday, icon }
     this.http.post<HttpResponse<User>>('/users', l_newUser).subscribe({
       next: result => {
-        if (result.status === 200) {
-          alert('User profile created successfully')
-          this.core.setDevWatch('user', l_newUser)
+        if (result.status === 201) {
+          alert(`User profile '${l_newUser.username}' created successfully`)
+          this.core.setDevWatch('newUser', l_newUser)
         } else {
-          alert(result.statusText)
+          alert(`Something went wrong! Status code: ${result.status}`)
         }
       },
       error: err => {
