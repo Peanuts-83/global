@@ -16,8 +16,9 @@ import { BioComponent } from './components/bio/bio.component';
 import { SoftComponent } from './components/soft/soft.component';
 import { ObjectifsComponent } from './components/objectifs/objectifs.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './components/common/core.module'
+import { AuthInterceptor } from './utils/http.interceptor'
 
 @NgModule({
   declarations: [
@@ -43,7 +44,13 @@ import { CoreModule } from './components/common/core.module'
     MatIconModule,
     MatListModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

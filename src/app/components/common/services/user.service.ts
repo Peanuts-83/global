@@ -20,10 +20,12 @@ export class UserService {
     return this._user$.value
   }
   public set user(value: User) {
+    localStorage.setItem('TRdevUser', JSON.stringify(value))
     this._user$.next(value)
   }
+
   public userList$: BehaviorSubject<User[]> = new BehaviorSubject([this.guestUser])
 
-
   constructor() {}
+
 }

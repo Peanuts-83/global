@@ -11,19 +11,12 @@ export class AuthService {
    * User
    * <string> 'guest' | 'admin'
   */
-  private _user = new BehaviorSubject<User>({ username: '', profile: 'guest' })
-  public get user$(): Observable<User> {
-    return this._user.asObservable()
-  }
   public get user(): User {
-    return this._user.value
+    return this.userService.user
   }
   public set user(value: User) {
-    this._user.next(value)
+    this.userService.user = value
   }
-  // public get userList(): User[] {
-  //   return this._user.value
-  // }
 
   /**
    * Token Managment
@@ -37,21 +30,17 @@ export class AuthService {
 
   public getToken() {
     const l_token = localStorage.getItem('TRdevToken')
-    // this.core.setDevWatch('token', datedToken ? datedToken.slice(0,15)+'...' : null)
-    // if timestamp
     if (l_token) {
-      const storage = localStorage.getItem('TRdevUser')
-      if (storage) {
-        const { username, email, profile, birthday } = JSON.parse(storage)
-        this.userService.user = { username, email, profile, birthday }
+      const l_user = localStorage.getItem('TRdevUser')
+      if (l_user) {
+        const { id, username, email, profile, birthday } = JSON.parse(l_user)
+        this.user = { id, username, email, profile, birthday }
         this.token$.next(l_token)
       }
     } else {
-      this.userService.user = { username: '', profile: 'guest' }
-      localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+      this.user = { username: '', profile: 'guest' }
       this.token$.next(null)
     }
-
     return l_token
   }
 
@@ -59,9 +48,8 @@ export class AuthService {
     this.token$.next(value)
     if (!value) {
       localStorage.removeItem('TRdevToken')
-      this.userService.user = { username: '', profile: 'guest' }
+      this.user = { username: '', profile: 'guest' }
     } else {
-      // const datedToken = `${value} ${new Date()}`
       localStorage.setItem('TRdevToken', value)
     }
   }

@@ -74,6 +74,6 @@ export class HttpService {
    * @returns Observable
    */
   public delete<T>(path: string, id: number, specPath?: string): Observable<T> {
-    return this.http.delete<T>(`${this.apiURL}${path}${specPath}/${id}`, { headers: this.headers })
+    return this.http.delete<T>(`${this.apiURL}${path}${specPath ? specPath : ''}/${id}`, { headers: this.headers })
   }
 }

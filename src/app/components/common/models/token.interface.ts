@@ -1,7 +1,6 @@
 
 export interface TokenResponse {
-  status: number
-  body: {
+    id?: number
     username: string
     message?: string
     error?: string
@@ -9,5 +8,5 @@ export interface TokenResponse {
     email?: string
     profile: string
     birthday?: string
-  }
+
 }

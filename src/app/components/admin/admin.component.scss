@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   padding: 10px;
+
   .avatar-icon {
     width: 30px;
     height: 30px;
@@ -33,7 +34,25 @@
 table {
   width: 100%;
   margin: 3em 0;
+
   th {
     background-color: rgba($color: black, $alpha: .5);
+  }
+
+  th.action,
+  td.action {
+    text-align: right;
+    width: 50px;
+
+    &mat-icon {
+      padding: 5px;
+    }
+  }
+
+  td.action mat-icon {
+    &:hover {
+      color: red;
+      cursor: pointer;
+    }
   }
 }

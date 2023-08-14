@@ -1,14 +1,16 @@
-import { Component } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { AuthService, Profile } from '../common/services/auth.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { BaseFormComponent } from '../common/base-form-component'
 import { Avatar } from './models/avatar.interface'
 import { TokenResponse } from '../common/models/token.interface'
-import { CoreService } from '../common/services/core.service'
+import { CoreService, HttpVerb } from '../common/services/core.service'
 import { User } from './models/user.interface'
 import { HttpResponse } from '@angular/common/http'
-import { BehaviorSubject, tap } from 'rxjs'
-import { DataSource } from '@angular/cdk/collections'
+import { tap } from 'rxjs'
+import { TableDataSource } from '../../utils/classes/tableDataSource'
+import { MatIcon } from '@angular/material/icon'
+import { MatTable } from '@angular/material/table'
 
 @Component({
   selector: 'app-admin',
@@ -20,9 +22,11 @@ export class AdminComponent extends BaseFormComponent {
   public createForm!: FormGroup
   public avatars: Avatar[] = []
   public userList!: User[]
-  public dataSource!: any
-  public displayedColumns = ['username', 'email', 'profile']
+  public dataSource!: TableDataSource<User>
+  public displayedColumns = ['username', 'email', 'profile', '#']
 
+  @ViewChild(MatTable)
+  public userListTable!: MatTable<User[]>
 
   constructor(core: CoreService, auth: AuthService, formBuilder: FormBuilder) {
     super(core, auth, formBuilder)
@@ -36,7 +40,7 @@ export class AdminComponent extends BaseFormComponent {
         if (result && result.body) {
           this.userService.userList$.next(result.body)
           this.userList = result.body
-          this.dataSource = new UserListDataSource(this.userList)
+          this.dataSource = new TableDataSource(this.userList)
         }
       })
     ).subscribe()
@@ -89,24 +93,27 @@ export class AdminComponent extends BaseFormComponent {
       username: this.loginForm.get('username')!.value,
       password: this.loginForm.get('password')!.value
     }
-    this.http.post<TokenResponse>('/users/auth', body).subscribe({
-      next: (result: TokenResponse) => {
+    this.core.doREQUEST<TokenResponse>(HttpVerb.POST, '/users/auth', body)?.subscribe({
+      next: (result: HttpResponse<TokenResponse>) => {
         if (result.status === 200) {
-          console.log(`SUCCESS - ${result.body?.message}`)
           this.core.initForm(this.loginForm)
         }
-        this.auth.setToken(result.body?.token ? result.body.token : null)
-        const { username, email, profile, birthday } = result.body
-        this.userService.user = { username, email, profile, birthday }
-        localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+        if (result.body) {
+          this.auth.setToken(result.body.token ? result.body.token : null)
+          const { id, username, email, profile, birthday } = result.body
+          this.userService.user = { id, username, email, profile, birthday }
+          localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+        } else {
+          this.auth.setToken(null)
+        }
       },
       error: err => {
-        console.error(`ERROR : ${err.error.body.error}`)
         if (err.status === 401) {
           this.auth.setToken(null)
         }
       }
     })
+    // this.http.post<TokenResponse>('/users/auth', body).subscribe()
   }
 
   public onLoggout(a_event: Event) {
@@ -133,21 +140,20 @@ export class AdminComponent extends BaseFormComponent {
       error: err => {
         alert(`Error : ${JSON.stringify(err.message)}`)
       }
-    }
-    )
+    })
+  }
+
+  public deleteUser(a_event: MouseEvent, id: number) {
+    console.log(a_event)
+    a_event.stopPropagation()
+    this.http.delete<HttpResponse<User>>('/users', id).subscribe({
+      next: result => {
+        console.log(result)
+        this.userService.userList$.next
+    },
+    error: (console.error)
+  })
   }
 
 
-}
-
-export class UserListDataSource extends DataSource<any> {
-  constructor(public ELEMENT_DATA: any) {
-    super()
-    this.ELEMENT_DATA = ELEMENT_DATA
-  }
-  data = new BehaviorSubject<any>(this.ELEMENT_DATA)
-  connect() {
-    return this.data
-  }
-  disconnect() { }
 }

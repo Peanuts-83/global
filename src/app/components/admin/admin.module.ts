@@ -10,8 +10,10 @@ import { MatSelectModule } from '@angular/material/select'
 import { MatButtonModule } from '@angular/material/button'
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatTableModule } from '@angular/material/table'
+import { MatIconModule } from '@angular/material/icon'
 import { ReactiveFormsModule } from "@angular/forms"
 import { UtilsModule } from "src/app/utils/utils.module"
+import { CoreModule } from "../common/core.module"
 
 
 @NgModule({
@@ -20,6 +22,9 @@ import { UtilsModule } from "src/app/utils/utils.module"
   ],
   imports: [
     CommonModule,
+    CoreModule,
+    ReactiveFormsModule,
+    UtilsModule,
     AdminRoutingModule,
     MatInputModule,
     MatDatepickerModule,
@@ -29,8 +34,7 @@ import { UtilsModule } from "src/app/utils/utils.module"
     MatButtonModule,
     MatTabsModule,
     MatTableModule,
-    ReactiveFormsModule,
-    UtilsModule
+    MatIconModule,
   ],
   providers: [
   ]
