@@ -18,7 +18,7 @@ import { ObjectifsComponent } from './components/objectifs/objectifs.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './components/common/core.module'
-import { AuthInterceptor } from './utils/http.interceptor'
+import { GlobalHttpInterceptor } from './utils/global-http.interceptor'
 
 @NgModule({
   declarations: [
@@ -47,7 +47,7 @@ import { AuthInterceptor } from './utils/http.interceptor'
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: GlobalHttpInterceptor,
       multi: true
     }
   ],

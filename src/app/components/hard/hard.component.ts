@@ -11,9 +11,9 @@ export class HardComponent {
   skills: Skill[] = []
 
   constructor(private httpService: HttpService) {
-    httpService.get<Skill[]>('/skills', '/hard').subscribe((result: Skill[]) => {
-      this.skills = result
-    })
+    // httpService.get<Skill[]>('/skills', '/hard').subscribe((result: Skill[]) => {
+    //   this.skills = result
+    // })
   }
 
 }

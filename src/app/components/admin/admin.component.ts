@@ -11,6 +11,7 @@ import { tap } from 'rxjs'
 import { TableDataSource } from '../../utils/classes/tableDataSource'
 import { MatIcon } from '@angular/material/icon'
 import { MatTable } from '@angular/material/table'
+import { HttpService } from '../common/services/http.service'
 
 @Component({
   selector: 'app-admin',
@@ -22,7 +23,8 @@ export class AdminComponent extends BaseFormComponent {
   public createForm!: FormGroup
   public avatars: Avatar[] = []
   public userList!: User[]
-  public dataSource!: TableDataSource<User>
+
+  // public dataSource!: TableDataSource<User>
   public displayedColumns = ['username', 'email', 'profile', '#']
 
   @ViewChild(MatTable)
@@ -35,15 +37,11 @@ export class AdminComponent extends BaseFormComponent {
   override ngOnInit(): void {
     super.ngOnInit()
     // Get userList
-    this.http.get<HttpResponse<User[]>>('/users').pipe(
-      tap(result => {
-        if (result && result.body) {
-          this.userService.userList$.next(result.body)
-          this.userList = result.body
-          this.dataSource = new TableDataSource(this.userList)
-        }
-      })
-    ).subscribe()
+    this.core.doUpdateUserList().subscribe(() => {
+      this.baseSubscription.add(this.userService.userList$.subscribe(result => {
+        this.userList = result
+      }))
+    })
     // Form init
     this.loginForm = this.formBuilder.group({
       username: [null, [Validators.required]],
@@ -74,7 +72,7 @@ export class AdminComponent extends BaseFormComponent {
        */
       birthday: [null],
       email: [null, [Validators.required, Validators.email]],
-      profile: ['guest'],
+      profile: ['guest', {nonNullable: true}],
       buffer: [null]
     })
     // Avatars init
@@ -93,27 +91,27 @@ export class AdminComponent extends BaseFormComponent {
       username: this.loginForm.get('username')!.value,
       password: this.loginForm.get('password')!.value
     }
-    this.core.doREQUEST<TokenResponse>(HttpVerb.POST, '/users/auth', body)?.subscribe({
-      next: (result: HttpResponse<TokenResponse>) => {
+    this.http.post<TokenResponse>('/users/auth', body).subscribe({
+      next: result => {
         if (result.status === 200) {
-          this.core.initForm(this.loginForm)
-        }
-        if (result.body) {
-          this.auth.setToken(result.body.token ? result.body.token : null)
-          const { id, username, email, profile, birthday } = result.body
-          this.userService.user = { id, username, email, profile, birthday }
-          localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
-        } else {
-          this.auth.setToken(null)
-        }
+                this.core.doInitForm(this.loginForm)
+              }
+              if (result.body) {
+                this.auth.setToken(result.body.token ? result.body.token : null)
+                const { id, username, email, profile, birthday } = result.body
+                this.userService.user = { id, username, email, profile, birthday }
+                localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+                this.core.setDevWatch('User', this.user)
+              } else {
+                this.auth.setToken(null)
+              }
       },
-      error: err => {
-        if (err.status === 401) {
-          this.auth.setToken(null)
+        error: err => {
+          if (err.status === 401) {
+            this.auth.setToken(null)
+          }
         }
-      }
     })
-    // this.http.post<TokenResponse>('/users/auth', body).subscribe()
   }
 
   public onLoggout(a_event: Event) {
@@ -121,6 +119,7 @@ export class AdminComponent extends BaseFormComponent {
     this.auth.setToken(null)
     this.userService.user = { username: '', profile: Profile.GUEST }
     localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+    this.core.setDevWatch('User', this.user)
   }
 
   public onCreateUser(a_event: Event) {
@@ -128,17 +127,18 @@ export class AdminComponent extends BaseFormComponent {
     // Get values from the form to create the user
     const { profile, username, password, buffer, email, birthday, icon } = this.createForm.value
     const l_newUser = { profile, username, password, buffer, email, birthday, icon }
-    this.http.post<HttpResponse<User>>('/users', l_newUser).subscribe({
+    this.http.post<User>('/users', l_newUser).subscribe({
       next: result => {
         if (result.status === 201) {
+          this.core.doInitForm(this.createForm)
           alert(`User profile '${l_newUser.username}' created successfully`)
-          this.core.setDevWatch('newUser', l_newUser)
         } else {
-          alert(`Something went wrong! Status code: ${result.status}`)
+          console.error(`Something went wrong! Status code: ${result.status}`)
         }
+        this.core.doUpdateUserList().subscribe()
       },
       error: err => {
-        alert(`Error : ${JSON.stringify(err.message)}`)
+        console.error(`Error : ${JSON.stringify(err.message)}`)
       }
     })
   }
@@ -146,13 +146,13 @@ export class AdminComponent extends BaseFormComponent {
   public deleteUser(a_event: MouseEvent, id: number) {
     console.log(a_event)
     a_event.stopPropagation()
-    this.http.delete<HttpResponse<User>>('/users', id).subscribe({
+    this.http.delete<User>('/users', id).subscribe({
       next: result => {
         console.log(result)
-        this.userService.userList$.next
-    },
-    error: (console.error)
-  })
+        this.core.doUpdateUserList().subscribe()
+      },
+      error: (console.error)
+    })
   }
 
 
