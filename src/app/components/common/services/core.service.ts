@@ -6,6 +6,7 @@ import { HttpService } from './http.service'
 import { AuthService, Profile } from './auth.service'
 import { HttpResponse } from '@angular/common/http'
 import { User } from '../../admin/models/user.interface'
+import { Router } from '@angular/router'
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class CoreService {
     this.devWatch$.next(val)
   }
 
-  constructor(public userService: UserService, public http: HttpService, private auth: AuthService) {
+  constructor(public userService: UserService, public http: HttpService, public router: Router, private auth: AuthService) {
     userService.user$.subscribe(user => {
       this.setDevWatch('User', user ? user : null)
     })
@@ -53,91 +54,16 @@ export class CoreService {
   }
 
   /**
-   * REQUEST data with httpRequest
-   * and manage base server response
-   * with res/err messages
-   * ********************************
-   * shareReplay to avoid multiple requests on same route
+   * Admin tabs managment
    */
-  // public doREQUEST<T>(verb: HttpVerb, path: string, body: any, id?: number, specPath?: string): Observable<HttpResponse<T>> | null {
-  //   switch (verb) {
-  //     case HttpVerb.POST:
-  //       return this.http.post<HttpResponse<T>>(path, body, specPath ? specPath : '').pipe(
-  //         tap({
-  //           next: (res: HttpResponse<T>) => {
-  //             if (res.status === 200) {
-  //               console.log(`SUCCESS - ${res.status} ${JSON.stringify(res.body)}`)
-  //             } else if (res.status === 201) {
-  //               console.log(`SUCCESS on CREATE - ${res.status} ${JSON.stringify(res.body)}`)
-  //             }
-  //           }
-  //         }
-  //         ),
-  //         catchError(error => {
-  //           console.error(error)
-  //           return EMPTY
-  //         }),
-  //         shareReplay(1),
-  //         map(result => result)
-  //       )
-  //     case HttpVerb.PUT:
-  //       return this.http.put<HttpResponse<T>>(path, body, specPath ? specPath : '').pipe(
-  //         tap({
-  //           next: (res: HttpResponse<T>) => {
-  //             if (res.status === 200) {
-  //               console.log(`SUCCESS - ${res.status} ${JSON.stringify(res.body)}`)
-  //             }
-  //           }
-  //         }
-  //         ),
-  //         catchError(error => {
-  //           console.error(error)
-  //           return EMPTY
-  //         }),
-  //         shareReplay(1),
-  //         map(result => result)
-  //       )
-  //     case HttpVerb.DELETE:
-  //       if (id) {
-  //         return this.http.delete<HttpResponse<T>>(path, id, specPath ? specPath : '').pipe(
-  //           tap({
-  //             next: (res: HttpResponse<T>) => {
-  //               if (res.status === 200) {
-  //                 console.log(`SUCCESS - ${res.status} ${JSON.stringify(res.body)}`)
-  //               }
-  //             }
-  //           }
-  //           ),
-  //           catchError(error => {
-  //             console.error(error)
-  //             return EMPTY
-  //           }),
-  //           shareReplay(1),
-  //           map(result => result)
-  //         )
-  //       }
-  //       return throwError(() => console.error('No id provided'))
-  //     default:
-  //       this.http.get<HttpResponse<T>>(path, specPath ? specPath : '').pipe(
-  //         tap({
-  //           next: (res: HttpResponse<T>) => {
-  //             if (res.status === 200) {
-  //               console.log(`SUCCESS - ${res.status} ${JSON.stringify(res.body)}`)
-  //             }
-  //           }
-  //         }
-  //         ),
-  //         catchError(error => {
-  //           console.error(error)
-  //           return EMPTY
-  //         }),
-  //         shareReplay(1),
-  //         map(result => result)
-  //       )
-  //   }
-  //   return null
-  // }
+  public adminTab: AdminTab = AdminTab.connect
 
+}
+
+export enum AdminTab {
+  'connect',
+  'create',
+  'list'
 }
 
 export enum HttpVerb {

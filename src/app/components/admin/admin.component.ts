@@ -4,14 +4,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { BaseFormComponent } from '../common/base-form-component'
 import { Avatar } from './models/avatar.interface'
 import { TokenResponse } from '../common/models/token.interface'
-import { CoreService, HttpVerb } from '../common/services/core.service'
+import { AdminTab, CoreService, HttpVerb } from '../common/services/core.service'
 import { User } from './models/user.interface'
 import { HttpResponse } from '@angular/common/http'
-import { tap } from 'rxjs'
+import { tap, throwError } from 'rxjs'
 import { TableDataSource } from '../../utils/classes/tableDataSource'
 import { MatIcon } from '@angular/material/icon'
 import { MatTable } from '@angular/material/table'
 import { HttpService } from '../common/services/http.service'
+import { MatTabChangeEvent } from '@angular/material/tabs'
 
 @Component({
   selector: 'app-admin',
@@ -23,6 +24,7 @@ export class AdminComponent extends BaseFormComponent {
   public createForm!: FormGroup
   public avatars: Avatar[] = []
   public userList!: User[]
+  public isUserListActive = false
 
   // public dataSource!: TableDataSource<User>
   public displayedColumns = ['username', 'email', 'profile', '#']
@@ -36,6 +38,10 @@ export class AdminComponent extends BaseFormComponent {
 
   override ngOnInit(): void {
     super.ngOnInit()
+    // Check user - isUserListActive if profile.includes('admin')
+    this.baseSubscription.add(
+      this.userService.user$.subscribe(result => this.isUserListActive=result.profile.includes('admin'))
+    )
     // Get userList
     this.core.doUpdateUserList().subscribe(() => {
       this.baseSubscription.add(this.userService.userList$.subscribe(result => {
@@ -105,10 +111,10 @@ export class AdminComponent extends BaseFormComponent {
               } else {
                 this.auth.setToken(null)
               }
-      },
-        error: err => {
-          if (err.status === 401) {
-            this.auth.setToken(null)
+            },
+            error: err => {
+              if (err.status === 401) {
+                this.auth.setToken(null)
           }
         }
     })
@@ -131,7 +137,6 @@ export class AdminComponent extends BaseFormComponent {
       next: result => {
         if (result.status === 201) {
           this.core.doInitForm(this.createForm)
-          alert(`User profile '${l_newUser.username}' created successfully`)
         } else {
           console.error(`Something went wrong! Status code: ${result.status}`)
         }
@@ -144,16 +149,32 @@ export class AdminComponent extends BaseFormComponent {
   }
 
   public deleteUser(a_event: MouseEvent, id: number) {
-    console.log(a_event)
     a_event.stopPropagation()
-    this.http.delete<User>('/users', id).subscribe({
-      next: result => {
-        console.log(result)
-        this.core.doUpdateUserList().subscribe()
-      },
-      error: (console.error)
-    })
+    if (this.isUserListActive) {
+      this.http.delete<User>('/users', id).subscribe({
+        next: result => {
+          this.core.doUpdateUserList().subscribe()
+        },
+        error: (console.error)
+      })
+    }
   }
 
+  /**
+   * core.adminTab change on tab use
+   */
+  public onTabChange(a_event: MatTabChangeEvent): void {
+    switch(a_event.index) {
+      case 0:
+        this.core.adminTab = AdminTab.connect
+        break
+        case 1:
+        this.core.adminTab = AdminTab.create
+        break
+        case 2:
+        this.core.adminTab = AdminTab.list
+        break
+    }
+  }
 
 }

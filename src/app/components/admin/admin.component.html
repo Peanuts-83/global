@@ -1,5 +1,5 @@
-<mat-tab-group>
-  <mat-tab label="Se connecter" *ngIf="user.profile!=='admin'">
+<mat-tab-group (selectedTabChange)="onTabChange($event)">
+  <mat-tab label="Se connecter" *ngIf="user.profile!=='admin' && user.profile!=='super_admin'">
     <form [formGroup]="loginForm" (ngSubmit)="onLoggin($event)">
       <mat-form-field MatFormFieldControl="username">
         <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
@@ -21,7 +21,7 @@
   </mat-tab>
 
 
-  <mat-tab label="Se déconnecter" *ngIf="user.profile==='admin'">
+  <mat-tab label="Se déconnecter" *ngIf="user.profile==='admin' || user.profile==='super_admin'">
     <form>
       <h3>Welcome back {{ core.userService.user.username }} you are connected as Admin</h3>
       <button mat-button (click)="onLoggout($event)">Déconnexion</button>
@@ -29,7 +29,7 @@
   </mat-tab>
 
 
-  <mat-tab label="Créer un utilisateur" [disabled]="user.profile!=='admin'">
+  <mat-tab label="Créer un utilisateur" [disabled]="user.profile!=='admin' && user.profile!=='super_admin'">
     <form *ngIf="createForm" [formGroup]="createForm" (ngSubmit)="onCreateUser($event)">
       <mat-form-field>
         <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
@@ -86,7 +86,7 @@
     </form>
   </mat-tab>
 
-  <mat-tab label="Liste des utilisateurs" [disabled]="user.profile!=='admin'" >
+  <mat-tab label="Liste des utilisateurs">
     <table *ngIf="userList" mat-table [dataSource]="userList" class="mat-elevation-z8">
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
