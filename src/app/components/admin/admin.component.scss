@@ -1,3 +1,5 @@
+@use '../../../variables.scss' as var;
+
 #avatar.mat-form-field {
   width: 30%;
   align-self: flex-end;
@@ -28,7 +30,7 @@
   border-radius: 50%;
   background-color: white;
   border: 7px solid white;
-  box-shadow: -3px -3px 5px rgb(5, 23, 54) inset;
+  box-shadow: -3px -3px 5px var.$color-grey-dark inset;
 }
 
 table {
@@ -36,14 +38,15 @@ table {
   margin: 3em 0;
 
   th {
-    background-color: rgba($color: black, $alpha: .5);
+    background-color: var.$color-prim-dark;
+    font-weight: bold;
+    color: white !important;
   }
 
   th.action,
   td.action {
     text-align: right;
     width: 50px;
-
     &mat-icon {
       padding: 5px;
     }
@@ -51,8 +54,17 @@ table {
 
   td.action mat-icon {
     &:hover {
-      color: red;
+      color: var.$color-prim-reg;
       cursor: pointer;
+    }
+  }
+
+  tr {
+    &:hover {
+      background-color: var.$color-accent-reg;
+    }
+    &:hover > * {
+      color: var.$color-grey-dark;
     }
   }
 }

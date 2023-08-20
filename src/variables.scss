@@ -1,0 +1,55 @@
+@import '@angular/material/theming';
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$app-primary: mat-palette($mat-pink-palette);
+$app-accent: mat-palette($mat-lime);
+$app-warn: mat-palette($mat-deep-orange);
+$app-success: mat-palette($mat-green);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: mat-dark-theme($app-primary, $app-accent, $app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($app-theme);
+
+$color-prim-light: map-get($app-theme, primary, 200);
+$color-prim-reg: map-get($app-theme, primary, 500);
+$color-prim-transp: rgba(map-get($app-theme, primary, 500),.5);
+$color-prim-dark: map-get($app-theme, primary, 800);
+
+$color-accent-light: map-get($app-theme, accent, 200);
+$color-accent-reg: map-get($app-theme, accent, 500);
+$color-accent-transp: rgba(map-get($app-theme, accent, 500),.5);
+$color-accent-dark: map-get($app-theme, accent, 800);
+
+$color-grey-light: #818181;
+$color-grey-reg: #606060;
+$color-grey-dark: #303030;
+
+
+@mixin mat-color ($prop, $color, $start-arg: null, $end-arg: null) {
+  #{$prop}: $start-arg $color $end-arg;
+}
+$accent: map-get($app-theme, accent);
+$color-primary: #{mat-color($app-primary)};
+$color-accent: #{mat-color($app-accent)};
+$color-warn: #{mat-color($app-warn)};
+$color-success: #{mat-color($app-success)};
+
+@mixin color-prim ($target, $tint) {
+  #{$target}: map-get($app-theme, $primary, $tint) !important;
+}
+
+@mixin styles_box ($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
