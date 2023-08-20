@@ -23,34 +23,23 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
           switch (res.status) {
             case 200:
               console.log(`200 \n${JSON.stringify(res.body)}`)
-              this.displayMsg('Operation successfull - OK')
               break
             case 201:
               console.log(`201 - CREATION OK \n${JSON.stringify(res.body)}`)
-              this.displayMsg('Creation successfull - OK')
               break
             default:
               console.log(`${res.status} - ${res.statusText}`)
           }
+          if (res.body.message) {
+            this.displayMsg(res.body.data.message)
+          }
         }
       }),
       catchError((err: HttpErrorResponse) => {
-        switch (err.status) {
-          case 400:
-            console.error(`400 - Error request \n${err.message}`)
-            break
-          case 401:
-          case 403:
-            this.displayMsg(err.error.body.message, 'alert')
-            break
-          case 404:
-            console.error(`404 - Not found \n${err.message}`)
-            break
-          case 500:
-            console.error(`500 - Server error \n${err.message}`)
-            break
-          default:
-            console.error(`${err.status} - Error \n${err.message}`)
+        if (err.error.body.error) {
+          this.displayMsg(err.error.body.error, 'alert')
+        } else if (err.error.body.message) {
+          this.displayMsg(err.error.body.message, 'alert')
         }
         return throwError(() => err)
       })
