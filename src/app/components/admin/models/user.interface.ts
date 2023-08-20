@@ -7,6 +7,6 @@ export interface User {
   profile: string
   buffer?: BinaryData
   icon?: string
-  allUsers?: User[]
-  deletedUSer?: User
+  // allUsers?: User[]
+  // deletedUSer?: User
 }

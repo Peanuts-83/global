@@ -1,5 +1,5 @@
 <mat-tab-group (selectedTabChange)="onTabChange($event)">
-  <mat-tab label="Se connecter" *ngIf="user.profile!=='admin' && user.profile!=='super_admin'">
+  <mat-tab label="Se connecter" *ngIf="user.username==''">
     <form [formGroup]="loginForm" (ngSubmit)="onLoggin($event)">
       <mat-form-field MatFormFieldControl="username">
         <input matInput type="text" formControlName="username" placeholder="Nom d'utilisateur" />
@@ -21,9 +21,9 @@
   </mat-tab>
 
 
-  <mat-tab label="Se déconnecter" *ngIf="user.profile==='admin' || user.profile==='super_admin'">
+  <mat-tab label="Se déconnecter" *ngIf="user.username!==''">
     <form>
-      <h3>Welcome back {{ core.userService.user.username }} you are connected as Admin</h3>
+      <h3>Welcome back {{ core.userService.user.username }} you are connected as {{core.userService.user.profile | titlecase}}</h3>
       <button mat-button (click)="onLoggout($event)">Déconnexion</button>
     </form>
   </mat-tab>
@@ -89,7 +89,7 @@
   <mat-tab label="Liste des utilisateurs">
     <table *ngIf="userList" mat-table [dataSource]="userList" class="mat-elevation-z8">
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="isUserListActive ? 'active': ''"></tr>
       <!-- Username Column -->
       <ng-container matColumnDef="username">
         <th mat-header-cell *matHeaderCellDef> Nom </th>
@@ -108,8 +108,8 @@
       <!-- Delete Column -->
       <ng-container  matColumnDef="#">
         <th mat-header-cell *matHeaderCellDef class="action"> Action </th>
-        <td mat-cell *matCellDef="let element" class="action">
-            <mat-icon fontIcon='delete' (click)="deleteUser($event, element._id)" title="Delete user"></mat-icon>
+        <td mat-cell *matCellDef="let element" class="action" [ngClass]="isUserListActive ? 'active': ''">
+            <mat-icon fontIcon='delete' (click)="deleteUser($event, element._id)" title="Delete user" [ngClass]="isUserListActive ? 'active': ''"></mat-icon>
         </td>
       </ng-container>
     </table>

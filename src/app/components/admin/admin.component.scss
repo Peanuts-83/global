@@ -52,7 +52,7 @@ table {
     }
   }
 
-  td.action mat-icon {
+  td.action mat-icon.active {
     &:hover {
       color: var.$color-prim-reg;
       cursor: pointer;
@@ -61,10 +61,15 @@ table {
 
   tr {
     &:hover {
-      background-color: var.$color-accent-reg;
+      background-color: var.$color-grey-dark;
     }
-    &:hover > * {
-      color: var.$color-grey-dark;
+    &.active {
+      &:hover {
+        background-color: var.$color-accent-reg;
+      }
+      &:hover > * {
+        color: var.$color-grey-dark;
+      }
     }
   }
 }
