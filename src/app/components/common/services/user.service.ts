@@ -1,17 +1,22 @@
 import { Injectable } from "@angular/core"
-import { HttpService } from "./http.service"
 import { BehaviorSubject, Observable } from "rxjs"
 import { User } from "../../admin/models/user.interface"
-import { HttpResponse } from "@angular/common/http"
 
+/**
+ * Service dedicated to Users
+ * @param user
+ * @param userList
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private guestUser = { username: '', profile: 'guest' }
+
   /**
-   * User
-   * <string> 'guest' | 'admin'
+   * user
+   * @param username<string>
+   * @param profile<'guest' | 'admin' | 'super_admin'>
   */
   private _user$ = new BehaviorSubject<User>(this.guestUser)
   public get user$(): Observable<User> {
@@ -25,6 +30,9 @@ export class UserService {
     this._user$.next(value)
   }
 
+  /**
+   * userList
+   */
   public userList$: BehaviorSubject<User[]> = new BehaviorSubject([this.guestUser])
 
 

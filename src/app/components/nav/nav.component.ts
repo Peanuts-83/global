@@ -3,8 +3,12 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators'
 import { Observable } from 'rxjs'
 import { CoreService } from '../common/services/core.service'
-import { UserService } from '../common/services/user.service'
 
+/**
+ * Nav component
+ * @param devWatch - Dev console to watch specific values for dev purpose only
+ * @param breakPoint$ - Reactive value for css managment (small|medium|large screen)
+ */
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -30,10 +34,10 @@ export class NavComponent {
       shareReplay()
     );
 
-    /**
-     * Breakpoint value
-     * watch for large/medium/small/xsmall sizes
-     */
+  /**
+   * Breakpoint value
+   * watch for large/medium/small/xsmall sizes
+   */
   readonly breakpoint$ = this.breakpointObserver
     .observe([Breakpoints.Large, Breakpoints.Medium, Breakpoints.Small, Breakpoints.XSmall])
     .pipe(
@@ -52,7 +56,7 @@ export class NavComponent {
 
 
 
-  constructor(private breakpointObserver: BreakpointObserver, private core: CoreService, public userService: UserService) {
+  constructor(private breakpointObserver: BreakpointObserver, public core: CoreService) {
     this.breakpoint$.subscribe()
     // report devtool to core service
     this.core.devWatch$.subscribe(result => this.devWatch = result)

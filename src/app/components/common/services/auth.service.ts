@@ -1,15 +1,20 @@
+import { User } from './../../admin/models/user.interface'
 import { Injectable } from '@angular/core'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import { UserService } from './user.service'
-import { User } from '../../admin/models/user.interface'
 
+/**
+ * Service dedicated to Authentication
+ * @param user
+ * @param token
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   /**
    * User
-   * <string> 'guest' | 'admin'
+   * <string> 'guest' | 'admin' | 'super_admin'
   */
   public get user(): User {
     return this.userService.user
@@ -23,23 +28,25 @@ export class AuthService {
     * Save token to localStorage with timestamp at the end
     * Set user <'guest'|'admin'>
    */
-  // public tokenAge: any
   public token$ = new BehaviorSubject<string | null>(null)
 
-  // TODO: token age should be managed at backend side...
 
-  public getToken() {
+  public getToken(): string | null {
     const l_token = localStorage.getItem('TRdevToken')
     if (l_token) {
       const l_user = localStorage.getItem('TRdevUser')
       if (l_user) {
-        const { id, username, email, profile, birthday } = JSON.parse(l_user)
-        this.user = { id, username, email, profile, birthday }
+        const { id, username, email, profile, birthday, password } = JSON.parse(l_user)
+        // Token & user set by localStorage
         this.token$.next(l_token)
+        this.user = { id, username, email, profile, birthday, password }
+      } else {
+        this.token$.next(null)
+        this.user = { username: '', profile: 'guest' }
       }
     } else {
-      this.user = { username: '', profile: 'guest' }
       this.token$.next(null)
+      this.user = { username: '', profile: 'guest' }
     }
     return l_token
   }
@@ -53,6 +60,7 @@ export class AuthService {
       localStorage.setItem('TRdevToken', value)
     }
   }
+
 
   constructor(private userService: UserService) { }
 

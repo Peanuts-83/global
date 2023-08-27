@@ -1,8 +1,18 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { AuthService, Profile } from './auth.service'
+import { AuthService } from './auth.service'
 
+/**
+ * Service dedicated to http requests
+ * @param apiUrl - base url for requests
+ * @param headers - auto-built headers
+ * *** 4 CRUD operators ***
+ * @param get
+ * @param post
+ * @param put
+ * @param delete
+ */
 @Injectable({
   providedIn: 'root'
 })

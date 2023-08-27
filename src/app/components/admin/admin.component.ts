@@ -1,17 +1,11 @@
 import { Component, ViewChild } from '@angular/core'
-import { AuthService, Profile } from '../common/services/auth.service'
+import { AuthService } from '../common/services/auth.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { BaseFormComponent } from '../common/base-form-component'
 import { Avatar } from './models/avatar.interface'
-import { TokenResponse } from '../common/models/token.interface'
-import { AdminTab, CoreService, HttpVerb } from '../common/services/core.service'
+import { AdminTab, CoreService } from '../common/services/core.service'
 import { User } from './models/user.interface'
-import { HttpResponse } from '@angular/common/http'
-import { tap, throwError } from 'rxjs'
-import { TableDataSource } from '../../utils/classes/tableDataSource'
-import { MatIcon } from '@angular/material/icon'
 import { MatTable } from '@angular/material/table'
-import { HttpService } from '../common/services/http.service'
 import { MatTabChangeEvent } from '@angular/material/tabs'
 
 @Component({
@@ -40,7 +34,7 @@ export class AdminComponent extends BaseFormComponent {
     super.ngOnInit()
     // Check user - isUserListActive if profile.includes('admin')
     this.baseSubscription.add(
-      this.userService.user$.subscribe(result => this.isUserListActive=result.profile.includes('admin'))
+      this.userService.user$.subscribe(result => this.isUserListActive = result.profile.includes('admin'))
     )
     // Get userList
     this.core.doUpdateUserList().subscribe(() => {
@@ -78,7 +72,7 @@ export class AdminComponent extends BaseFormComponent {
        */
       birthday: [null],
       email: [null, [Validators.required, Validators.email]],
-      profile: ['guest', {nonNullable: true}],
+      profile: ['guest', { nonNullable: true }],
       buffer: [null]
     })
     // Avatars init
@@ -97,34 +91,24 @@ export class AdminComponent extends BaseFormComponent {
       username: this.loginForm.get('username')!.value,
       password: this.loginForm.get('password')!.value
     }
-    this.http.post<TokenResponse>('/users/auth', body).subscribe({
+    this.core.doConnect(body).subscribe({
       next: result => {
         if (result.status === 200) {
-                this.core.doInitForm(this.loginForm)
-              }
-              if (result.body) {
-                this.auth.setToken(result.body.token ? result.body.token : null)
-                const { id, username, email, profile, birthday } = result.body
-                this.userService.user = { id, username, email, profile, birthday }
-                localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
-                this.core.setDevWatch('User', this.user)
-              } else {
-                this.auth.setToken(null)
-              }
-            },
-            error: err => {
-              if (err.status === 401) {
-                this.auth.setToken(null)
-          }
+          this.core.doInitForm(this.loginForm)
         }
+        this.core.setDevWatch('User', this.user)
+      },
+      error: err => {
+        if (err.status === 401) {
+          this.auth.setToken(null)
+        }
+      }
     })
   }
 
   public onLoggout(a_event: Event) {
     a_event.stopPropagation()
-    this.auth.setToken(null)
-    this.userService.user = { username: '', profile: Profile.GUEST }
-    localStorage.setItem('TRdevUser', JSON.stringify(this.userService.user))
+    this.core.doDisconnect()
     this.core.setDevWatch('User', this.user)
   }
 
@@ -164,14 +148,14 @@ export class AdminComponent extends BaseFormComponent {
    * core.adminTab change on tab use
    */
   public onTabChange(a_event: MatTabChangeEvent): void {
-    switch(a_event.index) {
+    switch (a_event.index) {
       case 0:
         this.core.adminTab = AdminTab.connect
         break
-        case 1:
+      case 1:
         this.core.adminTab = AdminTab.create
         break
-        case 2:
+      case 2:
         this.core.adminTab = AdminTab.list
         break
     }

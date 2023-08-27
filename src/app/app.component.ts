@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { BaseComponent } from './components/common/base-component'
-import { Base } from './components/common/models/base.interface'
 import { AuthService } from './components/common/services/auth.service'
-import { HttpService } from './components/common/services/http.service'
 import { CoreService } from './components/common/services/core.service'
 
 @Component({
@@ -18,8 +16,16 @@ export class AppComponent extends BaseComponent implements OnInit {
 
   override ngOnInit(): void {
     super.ngOnInit()
-    // Check for valid token in localStorage
+    // Check for valid token and credentials
     this.auth.getToken()
+    if (this.user.id) {
+      // if token available, perform checkTokenValidity request on userId
+      this.core.doCheckTokenValidity(this.user.id!).subscribe({
+        error: () => this.core.doDisconnect()
+      })
+    } else {
+      this.core.doDisconnect()
+    }
 
   }
 }
